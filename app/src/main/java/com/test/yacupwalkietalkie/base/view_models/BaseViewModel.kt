@@ -1,22 +1,33 @@
 package com.test.yacupwalkietalkie.base.view_models
 
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.test.yacupwalkietalkie.base.BaseActivity
+
+typealias StateResult <State, Effects> = Pair<State, Set<Effects>>
 
 abstract class BaseViewModel<State, Effects> : ViewModel() {
-    protected val stateInner: MutableLiveData<Pair<State, Set<Effects>>> = MutableLiveData()
-    val state = stateInner as LiveData<Pair<State, Set<Effects>>>
+    abstract val initialState: State
+    protected val stateResultInner: StateResultLiveData<State, Effects> = StateResultLiveData()
+    val stateResult: LiveData<StateResultEvent<State, Effects>> = stateResultInner
     val currentState: State
-        get() = state.value?.first ?: initialState()
+        get() = requireNotNull(stateResult.value?.peekData()?.first)
 
-    abstract fun initialState(): State
 
-    open fun onCreate() = Unit
-    open fun onStart() = Unit
-    open fun onResume() = Unit
-    open fun onPause() = Unit
-    open fun onStop() = Unit
-    open fun onDestroy() = Unit
+    open fun onCreate(act: BaseActivity) {
+        if (stateResultInner.value == null) {
+            stateResultInner.value = StateResultEvent(initialState to emptySet())
+        }
+    }
+
+    fun setStateResult(state: State, effects: Set<Effects> = emptySet()) {
+        stateResultInner.value = StateResultEvent(state to effects)
+    }
+
+    open fun onStart(act: BaseActivity) = Unit
+    open fun onResume(act: BaseActivity) = Unit
+    open fun onPause(act: BaseActivity) = Unit
+    open fun onStop(act: BaseActivity) = Unit
+    open fun onDestroy(act: BaseActivity) = Unit
 }

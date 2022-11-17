@@ -1,36 +1,79 @@
 package com.test.yacupwalkietalkie.screens.act_welcome
 
-import com.test.yacupwalkietalkie.base.App
+import com.test.yacupwalkietalkie.base.BaseActivity
+import com.test.yacupwalkietalkie.base.di.ActWelcomeInjector
+import com.test.yacupwalkietalkie.base.safe
+import com.test.yacupwalkietalkie.base.toSet
+import com.test.yacupwalkietalkie.base.view_models.BaseEffectsData
 import com.test.yacupwalkietalkie.base.view_models.BaseViewModel
 import com.test.yacupwalkietalkie.base.view_models.makeActionDelayed
+import com.test.yacupwalkietalkie.ui.common.ScreenState
+import com.test.yacupwalkietalkie.utils.permissions.PermissionManager
+import com.test.yacupwalkietalkie.utils.resources.StringsProvider
 
-class ActWelcomeVm(app: App) : BaseViewModel<ActWelcomeVm.State, ActWelcomeVm.Effects>() {
+class ActWelcomeVm : BaseViewModel<ActWelcomeVm.State, ActWelcomeVm.Effect>() {
+
+    var permissionManager: PermissionManager? = null
+    var stringsProvider: StringsProvider? = null
 
     data class State(
-        val title: String,
-        val subtitle: String,
+        val screenState: ScreenState,
+        val navigatedToSettings: Boolean
     )
 
-    sealed class Effects {
-        data class Toast(val text: String) : Effects()
+    sealed class Effect {
+        data class BaseEffectWrapper(val data: BaseEffectsData) : Effect()
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        stateInner.postValue(currentState to emptySet())
-        makeActionDelayed(delayTime = 5000) {
-            stateInner.postValue(
-                currentState.copy(
-                    title = "New title after delay",
-                    subtitle = "New subtitle after delay",
-                ) to setOf(Effects.Toast("Eeee and Toast Effect delay also"))
+    override val initialState: State = State(
+        screenState = ScreenState.SUCCESS,
+        navigatedToSettings = false
+    )
+
+    override fun onCreate(act: BaseActivity) {
+        super.onCreate(act)
+        val actWelcome = act as? ActWelcome ?: return
+        ActWelcomeInjector(actWelcome).injectVm(this)
+        proceedToNextIfPossible(false)
+    }
+
+    override fun onResume(act: BaseActivity) {
+        if (currentState.navigatedToSettings) {
+            proceedToNextIfPossible(true)
+        }
+        setStateResult(currentState.copy(navigatedToSettings = false))
+    }
+
+    private fun proceedToNextIfPossible(showErrorIfNot: Boolean) {
+        val pm = permissionManager ?: return
+        if (pm.areAllPermissionsGranted().safe()) {
+            setStateResult(
+                state = currentState.copy(screenState = ScreenState.SUCCESS),
+                effects = Effect.BaseEffectWrapper(
+                    data = BaseEffectsData.Toast("SDFdsfgsd")
+                ).toSet()
             )
+        } else {
+            val state = if (pm.hasAnyDeniedPermanently() && showErrorIfNot) {
+                currentState.copy(screenState = ScreenState.ERROR)
+            } else {
+                currentState.copy(screenState = ScreenState.SUCCESS)
+            }
+            setStateResult(state)
         }
     }
 
-    override fun initialState(): State = State(
-        title = "Some initial title",
-        subtitle = "Some initial subtitle"
-    )
-
+    inner class Listener {
+        fun onBottomButtonClicked() {
+            val pm = permissionManager ?: return
+            if (currentState.screenState == ScreenState.ERROR) {
+                setStateResult(currentState.copy(navigatedToSettings = true))
+                pm.navigateToAppPermissionsSettings()
+            } else {
+                pm.checkPermissions {
+                    proceedToNextIfPossible(true)
+                }
+            }
+        }
+    }
 }

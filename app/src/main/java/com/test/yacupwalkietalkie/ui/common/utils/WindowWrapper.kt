@@ -8,17 +8,18 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.test.yacupwalkietalkie.ui.common.theme.AppTheme
 
 interface WindowWrapper {
-    fun screenWindowData(): ScreenWindowData = ScreenWindowData(
-        colorStatusBar = AppTheme.color.white,
-        colorNavBar = AppTheme.color.white,
-        isUnderNavBar = false,
-        isUnderStatusBar = false,
-    )
+    val screenWindowData: ScreenWindowData
+        get() = ScreenWindowData(
+            colorStatusBar = AppTheme.color.white,
+            colorNavBar = AppTheme.color.white,
+            isUnderNavBar = false,
+            isUnderStatusBar = false,
+        )
 
     @Composable
     fun ApplyScreenWindowData() {
         val systemUiController = rememberSystemUiController()
-        val screenData = remember { screenWindowData() }
+        val screenData = remember { screenWindowData }
         val darkStatusBarIcons = screenData.isLightStatusBarIcons?.not()
             ?: (screenData.colorStatusBar.luminance() > 0.5f)
         val darkNavBarIcons = screenData.isLightNavBarIcons?.not()

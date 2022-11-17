@@ -1,11 +1,10 @@
 package com.test.yacupwalkietalkie.base
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
-import androidx.lifecycle.Observer
+import com.test.yacupwalkietalkie.base.view_models.BaseEffectsData
 import com.test.yacupwalkietalkie.base.view_models.BaseViewModel
 import com.test.yacupwalkietalkie.ui.common.getComposeRootView
 import com.test.yacupwalkietalkie.ui.common.theme.AppTheme
@@ -34,17 +33,25 @@ abstract class BaseActivity : AppCompatActivity(), WindowWrapper {
         stateConsumer: (State) -> Unit,
         effectsConsumer: (Set<Effects>) -> Unit,
     ) {
-        vm.state.observe(this, Observer {
-            stateConsumer.invoke(it.first)
-            effectsConsumer.invoke(it.second)
+        vm.stateResult.observe(this, { resultEvent ->
+            val stateResult = resultEvent.getIfNotHandled()
+            stateConsumer.invoke(stateResult.first)
+            effectsConsumer.invoke(stateResult.second)
         })
         addLifeCycleObserver(
-            onCreate = { vm.onCreate() },
-            onResume = { vm.onResume() },
-            onStart = { vm.onStart() },
-            onPause = { vm.onPause() },
-            onStop = { vm.onStop() },
-            onDestroy = { vm.onDestroy() },
+            onCreate = { vm.onCreate(this) },
+            onResume = { vm.onResume(this) },
+            onStart = { vm.onStart(this) },
+            onPause = { vm.onPause(this) },
+            onStop = { vm.onStop(this) },
+            onDestroy = { vm.onDestroy(this) },
         )
+    }
+
+    protected fun handleBaseEffects(data: BaseEffectsData) {
+        when (data) {
+            is BaseEffectsData.Toast -> Toast(data.text)
+            is BaseEffectsData.NavigateTo -> Toast("Will navitage somewhere!!!1")
+        }
     }
 }

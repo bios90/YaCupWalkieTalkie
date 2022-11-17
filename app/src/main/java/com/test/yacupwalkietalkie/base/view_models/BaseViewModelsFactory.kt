@@ -16,7 +16,7 @@ class BaseViewModelsFactory<V : ViewModel, A : Serializable>(
 
     override fun <V : ViewModel> create(modelClass: Class<V>): V {
         return when (viewModelClass) {
-            ActWelcomeVm::class.java -> ActWelcomeVm(App.app)
+            ActWelcomeVm::class.java -> ActWelcomeVm()
             else -> throw IllegalStateException("Trying to create unknown ViewModel")
         } as V
     }

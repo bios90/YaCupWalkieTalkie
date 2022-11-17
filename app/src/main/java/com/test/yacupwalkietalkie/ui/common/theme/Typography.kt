@@ -15,16 +15,19 @@ class Typography {
     val LightM = getFontWithSize(size = TextSize.M, fontWeight = FontWeight.Light)
     val LightL = getFontWithSize(size = TextSize.L, fontWeight = FontWeight.Light)
     val LightXl = getFontWithSize(size = TextSize.Xl, fontWeight = FontWeight.Light)
+    val LightXxl = getFontWithSize(size = TextSize.Xxl, fontWeight = FontWeight.Light)
 
     val RegS = getFontWithSize(size = TextSize.S)
     val RegM = getFontWithSize(size = TextSize.M)
     val RegL = getFontWithSize(size = TextSize.L)
     val RegXl = getFontWithSize(size = TextSize.Xl)
+    val RegXxl = getFontWithSize(size = TextSize.Xxl)
 
     val BoldS = getFontWithSize(size = TextSize.S, fontWeight = FontWeight.Bold)
     val BoldM = getFontWithSize(size = TextSize.M, fontWeight = FontWeight.Bold)
     val BoldL = getFontWithSize(size = TextSize.L, fontWeight = FontWeight.Bold)
     val BoldXl = getFontWithSize(size = TextSize.Xl, fontWeight = FontWeight.Bold)
+    val BoldXxl = getFontWithSize(size = TextSize.Xxl, fontWeight = FontWeight.Bold)
 
     @OptIn(ExperimentalUnitApi::class)
     private fun getFontWithSize(size: Float, fontWeight: FontWeight = FontWeight.Normal) =
@@ -51,4 +54,5 @@ object TextSize {
     val M = 14f
     val L = 16f
     val Xl = 19f
+    val Xxl = 24f
 }
