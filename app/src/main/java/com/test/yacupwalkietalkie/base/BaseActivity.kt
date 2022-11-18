@@ -1,5 +1,6 @@
 package com.test.yacupwalkietalkie.base
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
@@ -51,7 +52,24 @@ abstract class BaseActivity : AppCompatActivity(), WindowWrapper {
     protected fun handleBaseEffects(data: BaseEffectsData) {
         when (data) {
             is BaseEffectsData.Toast -> Toast(data.text)
-            is BaseEffectsData.NavigateTo -> Toast("Will navitage somewhere!!!1")
+            is BaseEffectsData.NavigateTo -> {
+                Intent(this, data.clazz)
+                    .apply {
+                        data.args?.let(::putArgs)
+                        if (data.finishAllPrevious) {
+                            addClearAllPreviousFlags()
+                        }
+                    }
+                    .apply(::startActivity)
+                if (data.finishCurrent && data.finishAllPrevious.not()) {
+                    finish()
+                }
+            }
+            is BaseEffectsData.Finish -> {
+                if (isFinishing.not()) {
+                    finish()
+                }
+            }
         }
     }
 }

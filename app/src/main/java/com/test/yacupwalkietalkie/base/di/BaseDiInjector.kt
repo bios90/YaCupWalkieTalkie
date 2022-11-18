@@ -1,11 +1,18 @@
 package com.test.yacupwalkietalkie.base.di
 
+import android.content.Context.WIFI_P2P_SERVICE
+import android.net.wifi.p2p.WifiP2pManager
+import android.os.Looper
+import com.test.yacupwalkietalkie.base.App
 import com.test.yacupwalkietalkie.base.BaseActivity
 import com.test.yacupwalkietalkie.utils.permissions.PermissionManager
 import com.test.yacupwalkietalkie.utils.resources.StringsProvider
 
-open class BaseDiInjector(private val act: BaseActivity) {
+object BaseDiInjector {
 
-    fun providePermissionsManager() = PermissionManager(act)
-    fun provideStringsProvider() = StringsProvider(act)
+    fun providePermissionsManager(act: BaseActivity): PermissionManager = PermissionManager(act)
+    fun provideStringsProvider(act: BaseActivity): StringsProvider = StringsProvider(act)
+    fun provideWifiP2pManager(act: BaseActivity): WifiP2pManager = App.app.getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
+    fun provideWifiP2pConnectionChannel(act: BaseActivity) =
+        provideWifiP2pManager(act).initialize(act, Looper.getMainLooper(), null)
 }

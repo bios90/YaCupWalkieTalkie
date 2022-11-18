@@ -7,6 +7,9 @@ import com.test.yacupwalkietalkie.base.toSet
 import com.test.yacupwalkietalkie.base.view_models.BaseEffectsData
 import com.test.yacupwalkietalkie.base.view_models.BaseViewModel
 import com.test.yacupwalkietalkie.base.view_models.makeActionDelayed
+import com.test.yacupwalkietalkie.data.ModelConnectionData
+import com.test.yacupwalkietalkie.screens.ActTalk.ActTalk
+import com.test.yacupwalkietalkie.screens.act_peers_list.ActPeersList
 import com.test.yacupwalkietalkie.ui.common.ScreenState
 import com.test.yacupwalkietalkie.utils.permissions.PermissionManager
 import com.test.yacupwalkietalkie.utils.resources.StringsProvider
@@ -50,7 +53,10 @@ class ActWelcomeVm : BaseViewModel<ActWelcomeVm.State, ActWelcomeVm.Effect>() {
             setStateResult(
                 state = currentState.copy(screenState = ScreenState.SUCCESS),
                 effects = Effect.BaseEffectWrapper(
-                    data = BaseEffectsData.Toast("SDFdsfgsd")
+                    data = BaseEffectsData.NavigateTo(
+                        clazz = ActPeersList::class.java,
+                        finishCurrent = true
+                    )
                 ).toSet()
             )
         } else {

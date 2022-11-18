@@ -5,6 +5,9 @@ package com.test.yacupwalkietalkie.base.view_models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.test.yacupwalkietalkie.base.App
+import com.test.yacupwalkietalkie.screens.ActTalk.ActTalk
+import com.test.yacupwalkietalkie.screens.ActTalk.ActTalkVm
+import com.test.yacupwalkietalkie.screens.act_peers_list.ActPeersListVm
 import com.test.yacupwalkietalkie.screens.act_welcome.ActWelcomeVm
 import java.io.Serializable
 
@@ -17,6 +20,8 @@ class BaseViewModelsFactory<V : ViewModel, A : Serializable>(
     override fun <V : ViewModel> create(modelClass: Class<V>): V {
         return when (viewModelClass) {
             ActWelcomeVm::class.java -> ActWelcomeVm()
+            ActPeersListVm::class.java -> ActPeersListVm()
+            ActTalkVm::class.java -> ActTalkVm(args = args as ActTalk.Args)
             else -> throw IllegalStateException("Trying to create unknown ViewModel")
         } as V
     }

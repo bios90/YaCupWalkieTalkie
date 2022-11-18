@@ -6,4 +6,6 @@
     <string name="bears_are_angry">Кажется вы разозлили мишек! Скорее в настройки что бы это исправить...</string>
     <string name="provide">Предоставить</string>
     <string name="to_settings">В настройки</string>
+    <string name="widi_disabled_lets_try_turn_on">Wifi выключен, давайте попробуем включить</string>
+    <string name="available_devices_here">Здесь отображаются утсройства доступные для подключения</string>
 </resources>

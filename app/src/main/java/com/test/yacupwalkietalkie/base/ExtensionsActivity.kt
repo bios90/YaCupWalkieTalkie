@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.Serializable
@@ -28,8 +29,8 @@ fun AppCompatActivity.addLifeCycleObserver(
     }
 )
 
-fun AppCompatActivity.makeActionDelayed(delayTime: Long, action: () -> Unit) {
-    lifecycleScope.launch {
+fun AppCompatActivity.makeActionDelayed(delayTime: Long, action: () -> Unit): Job {
+    return lifecycleScope.launch {
         delay(delayTime)
         action.invoke()
     }
@@ -44,3 +45,7 @@ fun <T : Serializable> Intent.getArgs(): T? {
 }
 
 fun <T : Serializable> AppCompatActivity.getArgs(): T? = intent?.getArgs()
+
+fun Intent.addClearAllPreviousFlags() {
+    this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+}

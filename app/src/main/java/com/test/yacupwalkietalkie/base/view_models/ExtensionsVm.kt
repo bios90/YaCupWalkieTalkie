@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -13,3 +15,9 @@ fun ViewModel.makeActionDelayed(delayTime: Long, action: () -> Unit) {
         action.invoke()
     }
 }
+
+fun ViewModel.makeOnBackground(action: suspend CoroutineScope.() -> Unit) =
+    viewModelScope.launch(
+        context = Dispatchers.IO,
+        block = action
+    )
