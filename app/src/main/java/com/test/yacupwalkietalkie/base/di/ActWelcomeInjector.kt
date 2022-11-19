@@ -9,7 +9,7 @@ class ActWelcomeInjector(
     private val actWelcome: ActWelcome
 ) {
     fun injectVm(vm: ActWelcomeVm) {
-        vm.permissionManager = providePermissionsManager(actWelcome)
+        vm.permissionsManager = providePermissionsManager(actWelcome)
         vm.stringsProvider = provideStringsProvider(actWelcome)
     }
 }

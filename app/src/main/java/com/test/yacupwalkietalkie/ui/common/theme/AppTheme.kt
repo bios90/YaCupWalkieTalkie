@@ -10,5 +10,5 @@ object AppTheme {
 
 @Composable
 fun AppTheme(content: @Composable() () -> Unit) {
-    content.invoke() //STOPSHIP Todo Make later theme settings if needed or remove
+    content.invoke()
 }

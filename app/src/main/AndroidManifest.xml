@@ -39,7 +39,15 @@
         <activity android:name="com.test.yacupwalkietalkie.screens.act_peers_list.ActPeersList" />
         <activity android:name="com.test.yacupwalkietalkie.screens.ActTalk.ActTalk" />
 
-        <service android:name="com.test.yacupwalkietalkie.utils.sockets.SocketService" />
+        <service
+            android:name="com.test.yacupwalkietalkie.utils.sockets.SocketService"
+            android:exported="true"
+            android:foregroundServiceType="location">
+            <intent-filter>
+                <action android:name="android.net.wifi.p2p.THIS_DEVICE_CHANGED" />
+            </intent-filter>
+            )
+        </service>
     </application>
 
 </manifest>

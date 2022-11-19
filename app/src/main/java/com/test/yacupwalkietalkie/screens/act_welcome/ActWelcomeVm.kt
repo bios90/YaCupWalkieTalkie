@@ -6,17 +6,14 @@ import com.test.yacupwalkietalkie.base.safe
 import com.test.yacupwalkietalkie.base.toSet
 import com.test.yacupwalkietalkie.base.view_models.BaseEffectsData
 import com.test.yacupwalkietalkie.base.view_models.BaseViewModel
-import com.test.yacupwalkietalkie.base.view_models.makeActionDelayed
-import com.test.yacupwalkietalkie.data.ModelConnectionData
-import com.test.yacupwalkietalkie.screens.ActTalk.ActTalk
 import com.test.yacupwalkietalkie.screens.act_peers_list.ActPeersList
 import com.test.yacupwalkietalkie.ui.common.ScreenState
-import com.test.yacupwalkietalkie.utils.permissions.PermissionManager
+import com.test.yacupwalkietalkie.utils.permissions.PermissionsManager
 import com.test.yacupwalkietalkie.utils.resources.StringsProvider
 
 class ActWelcomeVm : BaseViewModel<ActWelcomeVm.State, ActWelcomeVm.Effect>() {
 
-    var permissionManager: PermissionManager? = null
+    var permissionsManager: PermissionsManager? = null
     var stringsProvider: StringsProvider? = null
 
     data class State(
@@ -48,7 +45,7 @@ class ActWelcomeVm : BaseViewModel<ActWelcomeVm.State, ActWelcomeVm.Effect>() {
     }
 
     private fun proceedToNextIfPossible(showErrorIfNot: Boolean) {
-        val pm = permissionManager ?: return
+        val pm = permissionsManager ?: return
         if (pm.areAllPermissionsGranted().safe()) {
             setStateResult(
                 state = currentState.copy(screenState = ScreenState.SUCCESS),
@@ -71,7 +68,7 @@ class ActWelcomeVm : BaseViewModel<ActWelcomeVm.State, ActWelcomeVm.Effect>() {
 
     inner class Listener {
         fun onBottomButtonClicked() {
-            val pm = permissionManager ?: return
+            val pm = permissionsManager ?: return
             if (currentState.screenState == ScreenState.ERROR) {
                 setStateResult(currentState.copy(navigatedToSettings = true))
                 pm.navigateToAppPermissionsSettings()

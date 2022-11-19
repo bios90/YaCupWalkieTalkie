@@ -8,4 +8,12 @@
     <string name="to_settings">В настройки</string>
     <string name="widi_disabled_lets_try_turn_on">Wifi выключен, давайте попробуем включить</string>
     <string name="available_devices_here">Здесь отображаются утсройства доступные для подключения</string>
+    <string name="ratio_mode">Режим рации</string>
+    <string name="ratio_mode_explanation">При включении режима рации кнопка «Громкость -» будет работать как кнопка рации</string>
+    <string name="loading">Загрузка</string>
+    <string name="connecting">Подключаемся</string>
+    <string name="exit">Выход</string>
+    <string name="better_to_be_in_silence">Для наслаждения природой иногда лучше побыть в тишине. Выйти из эфира?</string>
+    <string name="make_exit">Выйти</string>
+    <string name="listen_more">Послушать ещё</string>
 </resources>

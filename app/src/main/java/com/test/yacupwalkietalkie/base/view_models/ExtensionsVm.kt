@@ -21,3 +21,11 @@ fun ViewModel.makeOnBackground(action: suspend CoroutineScope.() -> Unit) =
         context = Dispatchers.IO,
         block = action
     )
+
+fun ViewModel.makeOnUi(delayTime: Long? = null, action: suspend CoroutineScope.() -> Unit) = viewModelScope.launch(
+    context = Dispatchers.Main,
+    block = {
+        delayTime?.let { delay(it) }
+        action()
+    }
+)

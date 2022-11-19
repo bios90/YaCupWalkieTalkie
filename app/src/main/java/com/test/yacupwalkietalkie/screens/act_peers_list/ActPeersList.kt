@@ -3,6 +3,7 @@ package com.test.yacupwalkietalkie.screens.act_peers_list
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
+import androidx.core.view.WindowCompat
 import com.test.yacupwalkietalkie.base.BaseActivity
 import com.test.yacupwalkietalkie.base.view_models.createViewModelFactory
 import com.test.yacupwalkietalkie.data.ModelDevice
@@ -13,14 +14,7 @@ import com.test.yacupwalkietalkie.ui.common.utils.ScreenWindowData
 class ActPeersList : BaseActivity() {
 
     override val screenWindowData: ScreenWindowData
-        get() = ScreenWindowData(
-            colorNavBar = AppTheme.color.white,
-            colorStatusBar = AppTheme.color.white,
-            isUnderStatusBar = false,
-            isUnderNavBar = false,
-            isLightNavBarIcons = false,
-            isLightStatusBarIcons = false
-        )
+        get() = ScreenWindowData.fullScreenTrans()
 
     private val actPeersListVm: ActPeersListVm by viewModels {
         createViewModelFactory<ActPeersListVm>()
@@ -29,6 +23,7 @@ class ActPeersList : BaseActivity() {
     private var lastState: ActPeersListVm.State? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         subscribeState(
             vm = actPeersListVm,

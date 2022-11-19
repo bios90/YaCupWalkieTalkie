@@ -1,5 +1,6 @@
 package com.test.yacupwalkietalkie.utils.sockets
 
+import com.test.yacupwalkietalkie.utils.audio.AudioManager
 import java.lang.Exception
 import java.net.InetAddress
 import java.net.InetSocketAddress
@@ -14,6 +15,10 @@ object SocketConnectionManager {
         return try {
             val serverSocket = ServerSocket(PORT_USED)
             val socket = serverSocket.accept()
+                .apply {
+                    sendBufferSize = AudioManager.bufferRecordSize * 2
+                    receiveBufferSize = AudioManager.bufferRecordSize * 2
+                }
             socket
         } catch (e: Exception) {
             e.printStackTrace()
@@ -24,6 +29,10 @@ object SocketConnectionManager {
     fun startAsClient(address: InetAddress): Socket? {
         return try {
             val socket = Socket()
+                .apply {
+                    sendBufferSize = AudioManager.bufferRecordSize * 2
+                    receiveBufferSize = AudioManager.bufferRecordSize * 2
+                }
             socket.connect(
                 InetSocketAddress(address.hostAddress, PORT_USED),
                 TIMEOUT

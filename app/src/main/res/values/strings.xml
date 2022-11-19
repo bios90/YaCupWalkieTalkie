@@ -11,4 +11,19 @@
     <string name="available_devices_here">Здесь отображаются утсройства доступные для подключения</string>
     <string name="notification_title">YaCup2022</string>
     <string name="notification_text">Любуемся красотами Камчатки и общаемся)</string>
+    <string name="ratio_mode">Режим рации</string>
+    <string name="ratio_mode_explanation">При включении режима рации кнопка «Громкость&#160;-» будет работать как кнопка рации</string>
+    <string name="loading">Загрузка</string>
+    <string name="connecting">Подключаемся</string>
+    <string name="exit">Выход</string>
+    <string name="better_to_be_in_silence">Для наслаждения природой иногда лучше побыть в тишине. Выйти из эфира?</string>
+    <string name="make_exit">Выйти</string>
+    <string name="listen_more">Послушать ещё</string>
+
+    <plurals name="meters">
+        <item quantity="zero">метров</item>
+        <item quantity="one">метр</item>
+        <item quantity="few">метра</item>
+        <item quantity="many">метров</item>
+    </plurals>
 </resources>

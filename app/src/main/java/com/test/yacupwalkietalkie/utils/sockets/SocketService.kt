@@ -51,15 +51,9 @@ class SocketService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val args = intent?.getArgs<ActTalk.Args>() ?: return super.onStartCommand(intent, flags, startId)
-        if (isConnected().not()) {
-            startSocketConnection(args)
-        }
+        startSocketConnection(args)
         return START_NOT_STICKY
     }
-
-    private fun isConnected() = socket != null
-            && socket?.isConnected.safe()
-            && connectionJob?.isActive.safe()
 
     private fun startSocketConnection(args: ActTalk.Args) {
         connectionJob?.cancel()
@@ -69,6 +63,7 @@ class SocketService : Service() {
                 while (true) {
                     yield()
                     try {
+                        //TODO Better made Heartbeat system here but maybe later
                         if (socket == null || socket?.isConnected?.not() == true) {
                             if (args.connectionData.isGroupOwner) {
                                 socket = SocketConnectionManager.startServerSocket()
@@ -108,10 +103,7 @@ class SocketService : Service() {
     private fun setEvents() {
         flowShutDown
             .onEach {
-                socket?.tryGetOps()?.let { stream ->
-                    SocketDataManger.sendMessage(MessageBye(), stream)
-                }
-                socket?.closeQuietly()
+                stop()
                 stopSelf()
             }
             .flowOn(Dispatchers.IO)
@@ -129,14 +121,19 @@ class SocketService : Service() {
 
 
     override fun onDestroy() {
+        stop()
+        super.onDestroy()
+    }
+
+    private fun stop() {
         socket?.close()
+        socket = null
         connectionJob?.cancel()
         connectionJob = null
         messageListeningJob?.cancel()
         messageListeningJob = null
         serviceJob?.cancel()
         serviceScope.cancel()
-        super.onDestroy()
     }
 
     companion object {
@@ -159,6 +156,9 @@ class SocketService : Service() {
         //Sending messages
         private val flowMessageToSend = MutableSharedFlow<ISocketMessage>()
         fun sendMessage(message: ISocketMessage) = makeOnBackgroundGlobal { flowMessageToSend.emit(message) }
+        fun sendMessageSync(message: ISocketMessage) = socket?.tryGetOps()?.let { stream ->
+            SocketDataManger.sendMessage(message, stream)
+        }
 
         //Closing socket
         private val flowShutDown = MutableSharedFlow<Unit>()

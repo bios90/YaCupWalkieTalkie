@@ -1,6 +1,6 @@
 package com.test.yacupwalkietalkie.data.messages
 
-interface IMessageText : ISocketMessage {
+interface ITextMessage : ISocketMessage {
     var text: String
 
     override fun readFromBytes(bytes: ByteArray, length: Int) {

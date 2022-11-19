@@ -3,6 +3,11 @@ package com.test.yacupwalkietalkie.ui.common
 import android.content.Context
 import android.os.SystemClock
 import android.view.ViewGroup
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,7 +37,7 @@ fun getComposeRootView(context: Context) = ComposeView(context)
     }
 
 fun TextStyle.alignStart() = this.copy(textAlign = TextAlign.Start)
-fun TextStyle.secondaryTextColor() = this.copy(color = AppTheme.color.gray1)
+fun TextStyle.secondaryTextColor() = this.copy(color = AppTheme.color.gray2)
 
 @Composable
 inline fun debounced(crossinline onClick: () -> Unit, debounceTime: Long = 1000L): () -> Unit {
@@ -76,3 +81,28 @@ val CornerBasedShape.top: CornerBasedShape
     get() = copy(bottomStart = ZeroCornerSize, bottomEnd = ZeroCornerSize)
 val CornerBasedShape.bottom: CornerBasedShape
     get() = copy(topStart = ZeroCornerSize, topEnd = ZeroCornerSize)
+
+@Composable
+fun AnimatedVisibilityMy(
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    durationEnter: Int = 500,
+    durationExit: Int = 500,
+    content: @Composable() AnimatedVisibilityScope.() -> Unit,
+) = AnimatedVisibility(
+    modifier = modifier,
+    visible = visible,
+    content = content,
+    enter = fadeIn(
+        animationSpec = keyframes {
+            this.durationMillis = durationEnter
+        }
+    ),
+    exit = fadeOut(
+        animationSpec = keyframes {
+            this.durationMillis = durationExit
+        }
+    )
+)
+
+fun Color.withAlpha(alpha: Float) = copy(alpha = alpha)

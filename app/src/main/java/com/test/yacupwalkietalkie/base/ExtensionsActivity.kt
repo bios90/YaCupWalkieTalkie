@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,6 +36,13 @@ fun AppCompatActivity.makeActionDelayed(delayTime: Long, action: () -> Unit): Jo
         delay(delayTime)
         action.invoke()
     }
+}
+
+fun AppCompatActivity.runOnUiCompose(action: suspend CoroutineScope.() -> Unit): Job {
+    return lifecycleScope.launch(
+        context = Dispatchers.Main,
+        block = action
+    )
 }
 
 fun Intent.putArgs(args: Serializable) {

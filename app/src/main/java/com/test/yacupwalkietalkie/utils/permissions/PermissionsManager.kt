@@ -10,20 +10,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.test.yacupwalkietalkie.base.BaseActivity
 
-class PermissionManager(private val act: BaseActivity) {
+class PermissionsManager(private val act: BaseActivity) {
 
     data class PermissionCheckResult(
         val requested: List<String>,
         val granted: List<String>,
         val deniedNow: List<String>,
         val deniedPermanently: List<String>
-    ) {
-        fun areAllGranted() = requested.size == granted.size
-                && deniedNow.isEmpty()
-                && deniedPermanently.isEmpty()
-
-        fun areSomeDeniedPermanently() = deniedPermanently.isNotEmpty()
-    }
+    )
 
     private var onResultListener: ((PermissionCheckResult) -> Unit)? = null
     private var requestedPermissions: List<String> = emptyList()
@@ -103,30 +97,4 @@ class PermissionManager(private val act: BaseActivity) {
             listOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
         private val appPermissions = listOf(voicePermissions, locationPermissions).flatten().distinct()
     }
-
-    /*
-    *     private var onGrantedListener: (() -> Unit)? = null
-    private var onDeniedListener: (() -> Unit)? = null
-
-
-
-    fun checkPermissions(
-        onGranted: () -> Unit,
-        onDenied: () -> Unit,
-        permissions: List<String> = voicePermissions,
-    ) {
-        if (arePermissionsGranted(permissions)) {
-            onGranted.invoke()
-            onGrantedListener = null
-            onDeniedListener = null
-            return
-        }
-        if (onGrantedListener != null || onDeniedListener != null) {
-            return
-        }
-        onGrantedListener = onGranted
-        onDeniedListener = onDenied
-        permissionsResultListener.launch(permissions.toTypedArray())
-    }
-    * */
 }

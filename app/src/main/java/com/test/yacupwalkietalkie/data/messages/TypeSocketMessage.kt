@@ -3,7 +3,8 @@ package com.test.yacupwalkietalkie.data.messages
 enum class TypeSocketMessage {
     Voice,
     Location,
-    Bye;
+    Bye,
+    IsTalking;
 
     fun getTypeInt() = values().indexOf(this)
 

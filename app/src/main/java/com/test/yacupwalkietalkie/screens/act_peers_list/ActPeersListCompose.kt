@@ -1,5 +1,6 @@
 package com.test.yacupwalkietalkie.screens.act_peers_list
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,8 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,6 +21,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.test.yacupwalkietalkie.R
 import com.test.yacupwalkietalkie.data.ModelDevice
 import com.test.yacupwalkietalkie.ui.common.alignStart
@@ -27,6 +31,7 @@ import com.test.yacupwalkietalkie.ui.common.subviews.ButtonGreen
 import com.test.yacupwalkietalkie.ui.common.subviews.ItemDevice
 import com.test.yacupwalkietalkie.ui.common.theme.AppTheme
 import com.test.yacupwalkietalkie.ui.common.top
+import com.test.yacupwalkietalkie.ui.common.withAlpha
 
 @Composable
 fun ActPeersListCompose(
@@ -65,6 +70,31 @@ fun ActPeersListCompose(
                     AppSpacer(height = AppTheme.dimens.x8)
                 }
             })
+        }
+
+        if (state.isLoading) {
+            AnimatedVisibility(visible = state.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(AppTheme.color.black.withAlpha(0.7f))
+                ) {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        CircularProgressIndicator(
+                            color = AppTheme.color.white,
+                            modifier = Modifier.size(52.dp)
+                        )
+                        AppSpacer(height = AppTheme.dimens.x3)
+                        Text(
+                            style = AppTheme.typography.RegL.copy(color = AppTheme.color.white),
+                            text = stringResource(R.string.connecting)
+                        )
+                    }
+                }
+            }
         }
 
         if (state.isWifiEnabled == false) {
@@ -115,7 +145,8 @@ private fun Preview() {
                     macAddress = "00:00:00:00:02",
                     name = "DeviceName2"
                 )
-            )
+            ),
+            isLoading = true
         ),
         onDeviceClicked = {},
         onTurnWifiClicked = {}

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ButtonElevation
@@ -24,7 +23,6 @@ import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -41,6 +39,39 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.test.yacupwalkietalkie.ui.common.debounced
 import com.test.yacupwalkietalkie.ui.common.theme.AppTheme
+
+@Composable
+fun ButtonGray(
+    modifier: Modifier = Modifier,
+    text: String,
+    textStyle: TextStyle = AppTheme.typography.RegL,
+    onClick: () -> Unit,
+    isEnabled: Boolean = true,
+    corners: CornerBasedShape = RoundedCornerShape(AppTheme.dimens.x2),
+    elevation: ButtonElevation? = null,
+    minWidth: Dp = ButtonDefaults.MinWidth,
+    minHeight: Dp = ButtonDefaults.MinHeight,
+    contentPadding: PaddingValues = PaddingValues(horizontal = AppTheme.dimens.x4, vertical = AppTheme.dimens.x3),
+    imageStart: @Composable RowScope.() -> Unit = {},
+    textColor: Color = AppTheme.color.black,
+) {
+    BaseButton(
+        text = text,
+        textStyle = textStyle,
+        modifier = modifier
+            .clip(corners),
+        onClick = onClick,
+        colorBg = AppTheme.color.gray1,
+        colorRipple = AppTheme.color.black,
+        isEnabled = isEnabled,
+        elevation = elevation,
+        minWidth = minWidth,
+        minHeight = minHeight,
+        contentPadding = contentPadding,
+        imageStart = imageStart,
+        textColor = textColor
+    )
+}
 
 @Composable
 fun ButtonGreen(

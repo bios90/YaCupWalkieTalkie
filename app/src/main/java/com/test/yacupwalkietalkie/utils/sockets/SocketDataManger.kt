@@ -1,6 +1,9 @@
 package com.test.yacupwalkietalkie.utils.sockets
 
 import com.test.yacupwalkietalkie.data.messages.ISocketMessage
+import com.test.yacupwalkietalkie.data.messages.MessageBye
+import com.test.yacupwalkietalkie.data.messages.MessageIsSpeaking
+import com.test.yacupwalkietalkie.data.messages.MessageLocation
 import com.test.yacupwalkietalkie.data.messages.MessageVoice
 import com.test.yacupwalkietalkie.data.messages.TypeSocketMessage
 import java.io.DataInputStream
@@ -17,40 +20,49 @@ object SocketDataManger {
     private var typeSocketMessage: TypeSocketMessage? = null
     private var messageReaded: ISocketMessage? = null
 
+    private val sendKey = Any()
+    private val readKey = Any()
+
     fun sendMessage(msg: ISocketMessage, ops: OutputStream) {
-        try {
-            dos = DataOutputStream(ops)
-            dos?.writeShort(msg.getType().getTypeInt())
-            dos?.writeInt(msg.getLength())
-            dos?.write(msg.getBytes())
-            dos?.flush()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        synchronized(sendKey) {
+            try {
+                dos = DataOutputStream(ops)
+                dos?.writeShort(msg.getType().getTypeInt())
+                dos?.writeInt(msg.getLength())
+                dos?.write(msg.getBytes())
+                dos?.flush()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
+    @Synchronized
     fun readMessage(ips: InputStream): ISocketMessage? {
-        try {
-            dis = DataInputStream(ips)
-            dis?.apply {
-                typeInt = readShort()
-                length = readInt()
-                typeSocketMessage = TypeSocketMessage.fromInt(typeInt.toInt()) ?: return null
-                readBytes = ByteArray(length)
-                readFully(readBytes)
-                messageReaded = when (typeSocketMessage) {
-                    TypeSocketMessage.Voice -> MessageVoice()
-                    TypeSocketMessage.Location -> TODO()
-                    TypeSocketMessage.Bye -> MessageVoice()
-                    null -> TODO()
+        synchronized(readKey) {
+            try {
+                dis = DataInputStream(ips)
+                dis?.apply {
+                    typeInt = readShort()
+                    length = readInt()
+                    typeSocketMessage = TypeSocketMessage.fromInt(typeInt.toInt()) ?: return null
+                    readBytes = ByteArray(length)
+                    readFully(readBytes)
+                    messageReaded = when (typeSocketMessage) {
+                        TypeSocketMessage.Voice -> MessageVoice()
+                        TypeSocketMessage.Bye -> MessageBye()
+                        TypeSocketMessage.Location -> MessageLocation()
+                        TypeSocketMessage.IsTalking -> MessageIsSpeaking()
+                        null -> null
+                    }
+                    messageReaded?.readFromBytes(readBytes, length)
+                    return messageReaded
                 }
-                messageReaded?.readFromBytes(readBytes, length)
-                return messageReaded
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
             return null
         }
-        return null
     }
 }

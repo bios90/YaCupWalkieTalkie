@@ -1,7 +1,6 @@
 package com.test.yacupwalkietalkie.utils.audio
 
 import android.media.AudioRecord
-import com.test.yacupwalkietalkie.data.messages.MessageVoice
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

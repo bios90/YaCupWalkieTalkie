@@ -1,6 +1,7 @@
 package com.test.yacupwalkietalkie.base
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ abstract class BaseActivity : AppCompatActivity(), WindowWrapper {
     protected val rootView: ComposeView by lazy { getComposeRootView(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         super.onCreate(savedInstanceState)
         setContentView(rootView)
     }

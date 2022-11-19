@@ -6,5 +6,6 @@ import java.net.InetAddress
 data class ModelConnectionData(
     val isGroupOwner: Boolean,
     val groupOwnerAddress: InetAddress,
-    val deviceToConnect: ModelDevice?
+    val deviceToConnect: ModelDevice?,
+    val thisDeviceName: String
 ) : Serializable
